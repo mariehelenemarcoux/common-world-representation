@@ -4,6 +4,63 @@
 
 CWR is an experimental multiview representation method designed for **robustness to local changes of observation frame or information horizon**. It is not presented as a generally superior learning architecture.
 
+## Agent / researcher quickstart
+
+CWR is **not** claimed to be a generally superior classifier.
+
+The narrow, testable claim is:
+
+> **When the underlying process remains stable but one local observation frame changes, adaptive CWR should degrade less than a frozen shared representation or global multiview baselines.**
+
+Fast local verification:
+
+```bash
+python -m pip install -e ".[dev]"
+pytest -q
+python benchmarks/smoke_test.py
+```
+
+The smoke test is only a deterministic mechanism check. It is **not scientific evidence**.
+
+For external benchmark reproduction, see:
+
+- [`benchmarks/mhealth/`](benchmarks/mhealth/)
+- [`benchmarks/pamap2/`](benchmarks/pamap2/)
+
+For explicit falsification criteria, see:
+
+- [`docs/FALSIFICATION.md`](docs/FALSIFICATION.md)
+
+For instructions aimed at coding/research agents, see:
+
+- [`AGENTS.md`](AGENTS.md)
+
+### How to falsify CWR
+
+A useful falsification test should:
+
+1. use genuinely multiview data;
+2. keep the underlying task/state fixed;
+3. alter only one local observation mapping;
+4. compare adaptive CWR with frozen CWR and strong global baselines;
+5. match adaptation/data/compute budgets;
+6. evaluate paired degradation across independent subjects or environments;
+7. report stable-condition disadvantages and non-significant outcomes.
+
+Primary quantity:
+
+\[
+\Delta_{\mathrm{drift}}
+=
+\mathrm{performance}_{\mathrm{stable}}
+-
+\mathrm{performance}_{\mathrm{transformed}}.
+\]
+
+The CWR hypothesis predicts lower drift degradation. It does **not** predict universal superiority in stable conditions.
+
+---
+
 ## Main empirical claim
 
 The current evidence supports the narrower hypothesis that CWR can preserve a shared latent representation when one local view changes its mapping to the world.
