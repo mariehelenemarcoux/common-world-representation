@@ -124,4 +124,55 @@ The next meaningful test is replication on a second external multiview or multis
 
 ## License
 
+## PAMAP2 external replication
+
+To test whether the MHEALTH result generalized beyond a single dataset, CWR v0.1 was evaluated on the PAMAP2 Physical Activity Monitoring dataset without changing the core CWR mechanism or its frozen hyperparameters.
+
+The primary comparison used subjects 101–108 in a leave-one-subject-out protocol. Each subject was treated as an unseen test individual. The three PAMAP2 IMUs — wrist, chest, and ankle — were treated as three distinct perspectives of the same underlying physical activity.
+
+The main hypothesis was defined before evaluating PAMAP2:
+
+- CWR was not expected to outperform all baselines under stable observation conditions.
+- CWR was expected to degrade less when one local sensor observation frame changed.
+
+Controlled, physically coherent perturbations were applied to the wrist IMU:
+- 3D rotation of the local sensor frame;
+- loss of one axis;
+- 3D rotation combined with loss of one axis.
+
+The same rotation was applied consistently to the accelerometer, gyroscope, and magnetometer triads of the perturbed sensor.
+
+### Mean accuracy
+
+| Condition | CWR | CWR frozen | GCCA | ALS | PCA | Late fusion |
+|---|---:|---:|---:|---:|---:|---:|
+| Stable | 0.556 | 0.553 | 0.511 | 0.639 | 0.622 | 0.807 |
+| Wrist rotation | 0.557 | 0.411 | 0.357 | 0.435 | 0.417 | 0.663 |
+| Axis loss | 0.555 | 0.538 | 0.463 | 0.567 | 0.557 | 0.743 |
+| Rotation + axis loss | 0.556 | 0.439 | 0.361 | 0.430 | 0.413 | 0.662 |
+
+### Accuracy degradation relative to stable condition
+
+| Condition | CWR | CWR frozen | GCCA | ALS | PCA | Late fusion |
+|---|---:|---:|---:|---:|---:|---:|
+| Wrist rotation | -0.001 | 0.142 | 0.154 | 0.203 | 0.205 | 0.144 |
+| Axis loss | 0.000 | 0.015 | 0.048 | 0.072 | 0.065 | 0.064 |
+| Rotation + axis loss | 0.000 | 0.114 | 0.150 | 0.209 | 0.209 | 0.144 |
+
+Across the three perturbation conditions, CWR showed substantially lower degradation than GCCA, ALS, PCA, and the frozen CWR control.
+
+For 3D wrist rotation, CWR showed lower degradation than every comparison baseline for all 8 evaluated subjects.
+
+The wrist realignment detector triggered in:
+- 100% of wrist-rotation conditions;
+- 91.7% of rotation-plus-axis-loss conditions;
+- 41.7% of axis-loss-only conditions;
+- 4.2% of stable conditions.
+
+These results replicate the qualitative pattern previously observed on MHEALTH: CWR is not a generally superior classifier under stable conditions, but its local realignment mechanism appears to provide substantial robustness when a single observation frame changes while the underlying activity remains the same.
+
+### Scope of this result
+
+The PAMAP2 measurements are real sensor data collected from human participants. However, the frame rotations and axis-loss perturbations used in this benchmark were experimentally injected. They should therefore be interpreted as controlled robustness tests rather than naturally observed sensor reorientation events.
+
 MIT. Dataset licenses remain those of their original providers; MHEALTH data are not redistributed in this repository.
