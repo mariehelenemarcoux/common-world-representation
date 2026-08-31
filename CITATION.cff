@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: "CWR: Common World Representation"
+message: "If you use this software, please cite this repository."
+type: software
+authors:
+  - family-names: "Marcoux"
+    given-names: "Marie-Hélène"
+version: 0.1.0
+date-released: 2026-08-30
+license: MIT
+repository-code: "https://github.com/YOUR_USERNAME/common-world-representation"
