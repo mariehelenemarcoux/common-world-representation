@@ -4,6 +4,31 @@
 
 CWR is an experimental multiview representation method designed for **robustness to local changes of observation frame or information horizon**. It is not presented as a generally superior learning architecture.
 
+Keywords:
+multiview-learning
+sensor-fusion
+representation-learning
+domain-adaptation
+robustness
+distribution-shift
+sensor-drift
+frame-drift
+gcca
+multimodal-learning
+wearable-sensors
+human-activity-recognition
+machine-learning
+python
+research
+local observation-frame drift
+multiview robustness
+sensor orientation shift
+sensor calibration drift
+view alignment
+cross-view consistency
+missing sensor robustness
+shared latent representation
+
 ## Agent / researcher quickstart
 
 CWR is **not** claimed to be a generally superior classifier.
