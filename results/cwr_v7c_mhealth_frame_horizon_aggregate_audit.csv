@@ -1,0 +1,3 @@
+baseline,mean_drop_advantage_CWR,wins_subjects,losses_subjects,sign_p_one_sided,wilcoxon_p_one_sided
+CWR_frozen,0.1682732146204982,10,0,0.0009765625,0.0009765625
+plain_GCCA,0.19829301065448993,10,0,0.0009765625,0.0009765625
