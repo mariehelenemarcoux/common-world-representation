@@ -1,23 +1,30 @@
 import torch
 import torch.nn as nn
-from typing import Dict
+
 
 class DabrowskiKohlbergGating(nn.Module):
-    def __init__(self, embed_dim: int):
+    """
+    Filtrage fondé sur la désintégration positive (Dąbrowski - Niveau IV)
+    et les stades de jugement moral (Kohlberg).
+    Gouverne les représentations selon le niveau de maturité éthique.
+    """
+
+    def __init__(self, hidden_dim: int = 128):
         super().__init__()
-        self.third_factor_evaluator = nn.Linear(embed_dim + 1, 2)
-        
-    def forward(self, action_embedding: torch.Tensor, ethical_mass: torch.Tensor) -> Dict[str, torch.Tensor]:
-        combined = torch.cat([action_embedding, ethical_mass], dim=-1)
-        logits = self.third_factor_evaluator(combined)
-        probs = torch.softmax(logits, dim=-1)
-        
-        level_1_2_utility = probs[..., 0]
-        level_4_integrity = probs[..., 1]
-        third_factor_active = level_4_integrity > level_1_2_utility
-        
-        return {
-            "level_1_2_score": level_1_2_utility,
-            "level_4_score": level_4_integrity,
-            "third_factor_active": third_factor_active
-        }
+        self.hidden_dim = hidden_dim
+        self.gate_layer = nn.Linear(hidden_dim, hidden_dim)
+        self.activation = nn.Sigmoid()
+
+    def forward(self, x: torch.Tensor, ethical_mass: torch.Tensor) -> torch.Tensor:
+        """
+        Module l'entrée par la masse éthique calculée.
+
+        Args:
+            x (torch.Tensor): Empreinte vectorielle.
+            ethical_mass (torch.Tensor): Masse conative (0 à 1).
+
+        Returns:
+            torch.Tensor: Empreinte filtrée par le Troisième Facteur.
+        """
+        gate = self.activation(self.gate_layer(x)) * ethical_mass
+        return x * gate
