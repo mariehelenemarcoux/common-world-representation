@@ -19,8 +19,15 @@ class MetaConsciousCore(nn.Module):
         hidden_dim: int = 128,
         output_dim: int = 64,
         base_frequency: float = 963.0,
+        embed_dim: int = None,
     ):
         super().__init__()
+        
+        # Gestion de l'alias embed_dim pour rétrocompatibilité avec la suite de tests
+        if embed_dim is not None:
+            input_dim = embed_dim
+            output_dim = embed_dim
+
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         self.output_dim = output_dim
