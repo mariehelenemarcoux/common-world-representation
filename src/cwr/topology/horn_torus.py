@@ -1,22 +1,38 @@
 import torch
 import torch.nn as nn
-from typing import Tuple
+
 
 class HornTorusProjection(nn.Module):
-    def __init__(self, embed_dim: int):
+    """
+    Projection topologique sur la géométrie du Horn Torus.
+    Projette un espace vectoriel d'entrée vers une variété toroïdale
+    et calcule la distance à la singularité centrale.
+    """
+
+    def __init__(self, input_dim: int = 64, embedding_dim: int = 128):
         super().__init__()
-        self.embed_dim = embed_dim
-        self.to_toroidal = nn.Linear(embed_dim, 3)
-        
-    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        coords = torch.tanh(self.to_toroidal(x))
-        r, theta, phi = coords[..., 0], coords[..., 1], coords[..., 2]
-        rho = torch.abs(r)
-        
-        toroidal_embedding = torch.cat([
-            (1 + torch.cos(theta)) * torch.cos(phi).unsqueeze(-1),
-            (1 + torch.cos(theta)) * torch.sin(phi).unsqueeze(-1),
-            torch.sin(theta).unsqueeze(-1)
-        ], dim=-1)
-        
-        return toroidal_embedding, rho
+        self.input_dim = input_dim
+        self.embedding_dim = embedding_dim
+
+        # Couches de projection spatiale
+        self.projection = nn.Linear(input_dim, embedding_dim)
+        self.activation = nn.Tanh()
+
+    def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        """
+        Passe avant pour la projection topologique.
+
+        Args:
+            x (torch.Tensor): Tenseur d'entrée (batch_size, input_dim).
+
+        Returns:
+            tuple[torch.Tensor, torch.Tensor]:
+                - torus_embedding: Empreinte projetée sur le torus.
+                - singularity_dist: Distance scalaire par rapport au centre du torus.
+        """
+        torus_embedding = self.activation(self.projection(x))
+
+        # Calcul de la distance à la singularité centrale (norme L2)
+        singularity_dist = torch.norm(torus_embedding, dim=-1, keepdim=True)
+
+        return torus_embedding, singularity_dist
