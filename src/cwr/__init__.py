@@ -1,3 +1,2 @@
-from .core import CWR, PlainGCCA
-
-__all__ = ["CWR", "PlainGCCA"]
+from .core import MetaConsciousCore
+__version__ = "1.0.0"
